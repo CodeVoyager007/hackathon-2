@@ -1,4 +1,4 @@
-# Hackathon Phase 1
+# Code for Hackathon Phase 1 - Todo In-Memory Console App
 
 Phase 1 of the hackathon is done!
 
