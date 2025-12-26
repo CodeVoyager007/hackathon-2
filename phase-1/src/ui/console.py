@@ -39,16 +39,6 @@ class TodoConsole:
 
     def get_update_input(self) -> Tuple[Optional[str], Optional[str]]:
         console.print("[dim](Press Enter to keep current value)[/dim]")
-        title = Prompt.ask("New Title", default=None)
-        description = Prompt.ask("New Description", default=None)
-        
-        # Prompt.ask with default=None and no user input returns None?
-        # Rich Prompt behavior: if default is None, it waits for input.
-        # But we want "Enter to skip".
-        # Let's use allow_empty=True if supported or check for empty string.
-        # Actually Prompt.ask returns string. If default is provided, it returns default.
-        # If I want optional update, I should just ask.
-        # Let's re-implement simpler.
         
         title_in = Prompt.ask("New Title (leave blank to keep)", default="")
         desc_in = Prompt.ask("New Description (leave blank to keep)", default="")
@@ -81,12 +71,12 @@ class TodoConsole:
 
         table = Table(show_header=True, header_style="bold magenta")
         table.add_column("ID", style="dim", width=6)
-        table.add_column("Status", width=10)
+        table.add_column("Status", width=12)
         table.add_column("Title")
         table.add_column("Description")
 
         for task in tasks:
-            status = "[x]" if task.completed else "[ ]"
+            status = "[x] Done" if task.completed else "[ ] Pending"
             table.add_row(str(task.id), status, task.title, task.description)
         
         console.print(table)

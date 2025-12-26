@@ -61,5 +61,5 @@ class TaskService(ITaskService):
         if not task:
             raise TaskNotFoundError(f"Task {task_id} not found")
         
-        task.completed = not task.completed
+        task.completed = True
         return self._to_dto(task)
