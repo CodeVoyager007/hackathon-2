@@ -18,7 +18,7 @@ These form the foundation—quick to build, essential for any MVP:
    ```bash
    uv venv
    source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-   uv pip install rich
+   uv add rich
    ```
 
 2. Run the application:
