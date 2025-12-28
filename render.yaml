@@ -2,7 +2,7 @@ services:
   - type: web
     name: momentum-todo-backend
     runtime: python
-    rootDirectory: phase-2/backend
+    rootDir: phase-2/backend
     buildCommand: pip install -r requirements.txt
     startCommand: uvicorn src.main:app --host 0.0.0.0 --port 10000
     envVars:
