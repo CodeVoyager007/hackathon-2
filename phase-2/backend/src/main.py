@@ -17,6 +17,7 @@ origins = [
     "http://localhost:8000",
     "https://momentum-todo-app.vercel.app",
     "https://momentum-todo-app.vercel.app/",
+    "https://hackathon2-frontend-mu.vercel.app",
 ]
 
 app.add_middleware(
