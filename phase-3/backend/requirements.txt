@@ -9,3 +9,7 @@ pydantic-settings
 sqlalchemy-json
 python-dateutil
 requests
+pydantic
+pydantic-core
+openai
+google-generativeai
