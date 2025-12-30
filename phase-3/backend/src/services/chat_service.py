@@ -116,7 +116,7 @@ class ChatService:
                     
                     agent_messages.append({"role": "tool", "tool_call_id": tool_call.id, "content": json.dumps(result)})
             else:
-                final_response = resp_msg.content
+                final_response = resp_msg.content or ""
                 break
         
         asst_msg = Message(conversation_id=conv_id, user_id=user_id, role=Role.assistant.value, content=final_response)
