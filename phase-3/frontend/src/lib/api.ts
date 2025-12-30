@@ -1,6 +1,6 @@
 import { authClient } from "./auth-client";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://ayeshamughal-momentum-backend.hf.space";
 const API_PREFIX = "/api";
 
 export const fetchWithAuth = async (endpoint: string, options: RequestInit = {}) => {

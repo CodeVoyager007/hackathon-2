@@ -16,10 +16,8 @@ app = FastAPI(title="Todo App API", lifespan=lifespan)
 origins = [
     "http://localhost:3000",
     "http://localhost:8000",
-    "https://momentum-todo-app.vercel.app",
-    "https://momentum-todo-app.vercel.app/",
-    "https://hackathon2-frontend-mu.vercel.app",
-    "http://localhost:3000"
+    "https://momentum-ai-todo-app.vercel.app",
+    "https://momentum-ai-todo-app.vercel.app/",
 ]
 
 app.add_middleware(
