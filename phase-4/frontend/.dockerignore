@@ -1,0 +1,14 @@
+node_modules
+.next
+out
+build
+dist
+.env*
+!.env.example
+*.log
+.git
+.gitignore
+.dockerignore
+.vercel
+Dockerfile*
+docker-compose*
