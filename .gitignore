@@ -1,2 +1,7 @@
 
 .git.bak
+
+**/.env
+**/values.secrets.yaml
+**/*api*key*
+**/*secret*
