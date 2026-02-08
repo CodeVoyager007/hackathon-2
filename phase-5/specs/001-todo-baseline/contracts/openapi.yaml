@@ -1,0 +1,131 @@
+openapi: 3.0.3
+info:
+  title: Todo App API
+  version: 1.0.0
+  description: REST API for Todo Application
+servers:
+  - url: http://localhost:8000/api
+    description: Local Development Server
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    TaskBase:
+      type: object
+      required:
+        - title
+      properties:
+        title:
+          type: string
+          example: "Buy groceries"
+        is_completed:
+          type: boolean
+          default: false
+    TaskCreate:
+      allOf:
+        - $ref: '#/components/schemas/TaskBase'
+    TaskRead:
+      allOf:
+        - $ref: '#/components/schemas/TaskBase'
+      properties:
+        id:
+          type: string
+          format: uuid
+        owner_id:
+          type: string
+          format: uuid
+        created_at:
+          type: string
+          format: date-time
+    TaskUpdate:
+      type: object
+      properties:
+        title:
+          type: string
+        is_completed:
+          type: boolean
+security:
+  - bearerAuth: []
+paths:
+  /tasks:
+    get:
+      summary: List Tasks
+      description: Retrieve all tasks belonging to the authenticated user.
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TaskRead'
+        '401':
+          description: Unauthorized
+    post:
+      summary: Create Task
+      description: Create a new task for the authenticated user.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskCreate'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskRead'
+        '401':
+          description: Unauthorized
+
+  /tasks/{task_id}:
+    parameters:
+      - name: task_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      summary: Get Task
+      description: Retrieve a specific task by ID (must belong to user).
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskRead'
+        '404':
+          description: Not Found (or Forbidden)
+    put:
+      summary: Update Task
+      description: Update a task's title or status.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskUpdate'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskRead'
+        '404':
+          description: Not Found
+    delete:
+      summary: Delete Task
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: Not Found

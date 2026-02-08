@@ -1,0 +1,67 @@
+# Helm Chart Values Interface
+# This defines the configuration contract for the Deployment
+
+frontend:
+  # The image repository and tag
+  image:
+    repository: todo-chatbot-frontend
+    tag: latest
+    pullPolicy: Never # Use Never for local Minikube images
+  
+  # Number of pods
+  replicaCount: 2
+  
+  # Service configuration
+  service:
+    type: ClusterIP
+    port: 80
+    targetPort: 3000
+
+  # Resource limits
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+backend:
+  # The image repository and tag
+  image:
+    repository: todo-chatbot-backend
+    tag: latest
+    pullPolicy: Never
+  
+  # Number of pods
+  replicaCount: 2
+  
+  # Service configuration
+  service:
+    type: ClusterIP
+    port: 8000
+    targetPort: 8000
+
+  # Resource limits
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+    requests:
+      cpu: 200m
+      memory: 256Mi
+
+# Application Configuration (ConfigMap)
+config:
+  environment: development
+  # Frontend needs to know where backend is (browser-side)
+  # For local minikube, this might need to be the tunnel URL
+  nextPublicApiUrl: "http://localhost:8000"
+
+# Secrets are NOT defined here by default but must be passed
+# via --set or separate secrets.yaml
+secrets:
+  databaseUrl: ""
+  openaiApiKey: ""
+  geminiApiKey: ""
+  betterAuthSecret: ""

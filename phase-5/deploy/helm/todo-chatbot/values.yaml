@@ -1,0 +1,58 @@
+# Default values for todo-chatbot.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+global:
+  environment: development
+
+frontend:
+  replicaCount: 2
+  image:
+    repository: todo-chatbot-frontend
+    pullPolicy: Never
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: "latest"
+  service:
+    type: ClusterIP
+    port: 80
+    targetPort: 3000
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+backend:
+  replicaCount: 2
+  image:
+    repository: todo-chatbot-backend
+    pullPolicy: Never
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: "latest"
+  service:
+    type: ClusterIP
+    port: 8000
+    targetPort: 8000
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+    requests:
+      cpu: 200m
+      memory: 256Mi
+
+config:
+  environment: development
+  # Use local development backend URL for now
+  # For Kubernetes internal comms, this would be http://todo-chatbot-backend:8000
+  nextPublicApiUrl: "http://localhost:8000"
+
+# Secrets should be provided via --set or values.secrets.yaml
+secrets:
+  databaseUrl: ""
+  openaiApiKey: ""
+  geminiApiKey: ""
+  betterAuthSecret: ""
+  jwtSecret: ""

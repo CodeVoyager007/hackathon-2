@@ -1,0 +1,58 @@
+openapi: 3.0.0
+info:
+  title: Voice Input API
+  version: 1.0.0
+paths:
+  /api/voice/process:
+    post:
+      summary: Process a natural language voice transcript
+      operationId: processVoiceCommand
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - transcript
+              properties:
+                transcript:
+                  type: string
+                  description: The raw text captured by the frontend STT.
+                client_timezone:
+                  type: string
+                  description: IANA timezone string (e.g., "America/New_York") for date parsing.
+      responses:
+        '200':
+          description: Command processed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VoiceResponse'
+        '400':
+          description: Bad request (empty transcript)
+        '500':
+          description: Internal server error (LLM failure)
+
+components:
+  schemas:
+    VoiceResponse:
+      type: object
+      required:
+        - success
+        - message
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+          description: Text for the frontend to speak back to the user.
+        action_type:
+          type: string
+          enum: [CREATE, UPDATE, QUERY, DELETE, ERROR, NONE]
+        payload:
+          type: object
+          description: The task data created/updated or query results.
+        confirmation_needed:
+          type: boolean
+          default: false
