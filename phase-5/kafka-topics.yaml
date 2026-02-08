@@ -1,0 +1,32 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  name: task-events
+  namespace: kafka
+  labels:
+    strimzi.io/cluster: taskflow-kafka
+spec:
+  partitions: 3
+  replicas: 1
+---
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  name: reminders
+  namespace: kafka
+  labels:
+    strimzi.io/cluster: taskflow-kafka
+spec:
+  partitions: 3
+  replicas: 1
+---
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  name: task-updates
+  namespace: kafka
+  labels:
+    strimzi.io/cluster: taskflow-kafka
+spec:
+  partitions: 3
+  replicas: 1

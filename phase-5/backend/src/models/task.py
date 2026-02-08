@@ -16,6 +16,7 @@ class Recurrence(str, Enum):
     daily = "daily"
     weekly = "weekly"
     monthly = "monthly"
+    yearly = "yearly"
 
 class Task(SQLModel, table=True):
     __tablename__ = "tasks"
@@ -26,11 +27,22 @@ class Task(SQLModel, table=True):
     due_date: Optional[datetime] = Field(default=None)
     
     tags: List[str] = Field(default=[], sa_column=Column(JSON))
-    recurrence: str = Field(default=Recurrence.none.value)
-    reminder_at: Optional[datetime] = Field(default=None)
+    recurrence: Optional[dict] = Field(default=None, sa_column=Column(JSON))
     
     completed: bool = Field(default=False)
     # Renamed to user_id to match Phase III Spec
     user_id: str = Field(foreign_key="user.id", index=True) 
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
+
+class Reminder(SQLModel, table=True):
+    __tablename__ = "reminders"
+    id: Optional[int] = Field(default=None, primary_key=True)
+    user_id: str = Field(index=True)
+    task_id: uuid.UUID = Field(foreign_key="tasks.id")
+    due_at: datetime
+    remind_at: datetime
+    sent: bool = Field(default=False)
+    job_name: str = Field(unique=True)
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+
