@@ -16,6 +16,10 @@ spec:
       labels:
         {{- include "todo-chatbot.selectorLabels" . | nindent 8 }}
         app: todo-frontend
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "frontend-service"
+        dapr.io/app-port: "3000"
     spec:
       containers:
         - name: frontend

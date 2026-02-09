@@ -1,11 +1,12 @@
 "use client";
 
-import { format, isToday, isTomorrow } from "date-fns";
-import { Trash2, Calendar, Star, Clock } from "lucide-react";
+import { format, isToday, isTomorrow, isPast } from "date-fns";
+import { Trash2, Calendar, Star, Clock, Tag, Repeat } from "lucide-react";
 import { Task } from "@/lib/api";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 const priorityConfig = {
   low: { color: "text-blue-500 bg-blue-500/10 border-blue-200", icon: null },
@@ -15,15 +16,20 @@ const priorityConfig = {
 
 export function TaskCard({ task, onToggle, onDelete }: { task: Task; onToggle: (id: string) => void; onDelete: (id: string) => void; }) {
   
+  const isOverdue = task.due_date && isPast(new Date(task.due_date)) && !isToday(new Date(task.due_date)) && !task.completed;
+
   const getDueDateLabel = (date: string) => {
     const d = new Date(date);
     if (isToday(d)) return <span className="text-orange-500 font-medium">Today</span>;
     if (isTomorrow(d)) return <span>Tomorrow</span>;
-    return <span>{format(d, "MMM d")}</span>;
+    return <span className={cn(isOverdue && "text-destructive font-semibold")}>{format(d, "MMM d")}</span>;
   };
 
   return (
-    <Card className="hover:shadow-md transition-all duration-200 border-border/50 group">
+    <Card className={cn(
+        "hover:shadow-md transition-all duration-200 border-border/50 group",
+        isOverdue && "border-destructive/50 bg-destructive/5"
+    )}>
       <CardContent className="p-4 flex items-start gap-4">
         {/* Custom Checkbox Style */}
         <div 
@@ -42,17 +48,22 @@ export function TaskCard({ task, onToggle, onDelete }: { task: Task; onToggle: (
             <span
               className={`font-medium leading-tight transition-all ${
                 task.completed ? "line-through text-muted-foreground/60" : "text-foreground"
-              }`}
+              } ${isOverdue ? "text-destructive" : ""}`}
             >
               {task.title}
             </span>
-            <Badge 
-              variant="outline" 
-              className={`capitalize text-[10px] px-1.5 py-0 h-5 font-normal shrink-0 ${priorityConfig[task.priority].color}`}
-            >
-              {priorityConfig[task.priority].icon && <span className="mr-1">{priorityConfig[task.priority].icon}</span>}
-              {task.priority}
-            </Badge>
+            <div className="flex items-center gap-2">
+                {task.recurrence && task.recurrence.pattern !== 'none' && (
+                    <Repeat className="h-3 w-3 text-muted-foreground" />
+                )}
+                <Badge 
+                variant="outline" 
+                className={`capitalize text-[10px] px-1.5 py-0 h-5 font-normal shrink-0 ${priorityConfig[task.priority].color}`}
+                >
+                {priorityConfig[task.priority].icon && <span className="mr-1">{priorityConfig[task.priority].icon}</span>}
+                {task.priority}
+                </Badge>
+            </div>
           </div>
           
           {task.description && (
@@ -63,10 +74,21 @@ export function TaskCard({ task, onToggle, onDelete }: { task: Task; onToggle: (
             </p>
           )}
 
+          {/* Tags */}
+          {task.tags && task.tags.length > 0 && (
+            <div className="flex flex-wrap gap-1 py-1">
+                {task.tags.map(tag => (
+                    <Badge key={tag} variant="secondary" className="text-[9px] px-1 py-0 h-4 bg-muted/50 text-muted-foreground font-normal">
+                        <Tag className="h-2 w-2 mr-1" /> {tag}
+                    </Badge>
+                ))}
+            </div>
+          )}
+
           <div className="flex items-center gap-4 text-[11px] text-muted-foreground/70 pt-1">
             {task.due_date && (
               <div className="flex items-center gap-1">
-                <Calendar className="h-3 w-3 opacity-70" />
+                <Calendar className={cn("h-3 w-3 opacity-70", isOverdue && "text-destructive opacity-100")} />
                 {getDueDateLabel(task.due_date)}
               </div>
             )}
@@ -89,6 +111,7 @@ export function TaskCard({ task, onToggle, onDelete }: { task: Task; onToggle: (
     </Card>
   );
 }
+
 
 function CheckIcon(props: React.SVGProps<SVGSVGElement>) {
     return (

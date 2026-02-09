@@ -45,9 +45,47 @@ backend:
 
 config:
   environment: development
-  # Use local development backend URL for now
-  # For Kubernetes internal comms, this would be http://todo-chatbot-backend:8000
-  nextPublicApiUrl: "http://localhost:8000"
+  # For local development, this might be overridden. 
+  # For K8s internal comms, services use their cluster names.
+  nextPublicApiUrl: "http://backend-service:8000"
+
+notificationService:
+  enabled: true
+  replicaCount: 1
+  image:
+    repository: notification-service
+    pullPolicy: Never
+    tag: "latest"
+  service:
+    port: 8001
+  resources:
+    limits:
+      cpu: 200m
+      memory: 256Mi
+    requests:
+      cpu: 50m
+      memory: 64Mi
+
+recurringTaskService:
+  enabled: true
+  replicaCount: 1
+  image:
+    repository: recurring-task-service
+    pullPolicy: Never
+    tag: "latest"
+  service:
+    port: 8002
+  resources:
+    limits:
+      cpu: 200m
+      memory: 256Mi
+    requests:
+      cpu: 50m
+      memory: 64Mi
+
+kafka:
+  brokers: "taskflow-kafka-kafka-bootstrap.kafka.svc.cluster.local:9092"
+
 
 # Secrets should be provided via --set or values.secrets.yaml
 secrets:

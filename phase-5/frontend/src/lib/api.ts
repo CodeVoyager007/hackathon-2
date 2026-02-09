@@ -45,13 +45,16 @@ const getUserId = async () => {
 
 export interface Task {
   id: string;
-  title: string;
+  title: str;
   description?: string;
   priority: "low" | "medium" | "high";
   due_date?: string;
   completed: boolean;
   tags: string[];
-  recurrence: "none" | "daily" | "weekly" | "monthly";
+  recurrence?: {
+    pattern: "none" | "daily" | "weekly" | "monthly" | "yearly";
+    interval: number;
+  };
   created_at: string;
   updated_at: string;
 }
@@ -59,10 +62,12 @@ export interface Task {
 // Define a specific type for query parameters
 interface TaskQueryParams {
     search?: string;
-    sort_by?: 'date_asc' | 'date_desc' | 'priority';
-    status?: 'todo' | 'done';
+    sort_by?: 'created_at_desc' | 'due_date_asc' | 'priority_desc' | 'title_asc';
+    status?: 'all' | 'pending' | 'completed';
     tag?: string;
+    priority?: "low" | "medium" | "high";
 }
+
 
 export const getTasks = async (params: TaskQueryParams = {}): Promise<Task[]> => {
   const userId = await getUserId();

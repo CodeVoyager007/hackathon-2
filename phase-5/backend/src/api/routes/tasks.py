@@ -16,23 +16,30 @@ def validate_user_access(user_id: str, current_user: User):
 
 # Changed routes to start with /users/
 @router.post("/users/{user_id}/tasks", response_model=TaskRead)
-def create_task(
+async def create_task(
     user_id: str,
     task_in: TaskCreate,
     session: Session = Depends(get_session),
     current_user: User = Depends(get_current_user)
 ):
     validate_user_access(user_id, current_user)
-    return task_service.create_task(session, task_in, current_user.id)
+    task = task_service.create_task(session, task_in, current_user.id)
+    
+    # Async actions
+    await task_service.publish_event_to_dapr("task.created", task)
+    if task.due_date:
+        await task_service.schedule_reminder_job(task)
+        
+    return task
 
 @router.get("/users/{user_id}/tasks", response_model=List[TaskRead])
-def read_tasks(
+async def read_tasks(
     user_id: str,
     session: Session = Depends(get_session),
     current_user: User = Depends(get_current_user),
     search: Optional[str] = None,
     priority: Optional[str] = None,
-    status: Optional[str] = "todo",
+    status: Optional[str] = "pending",
     sort_by: Optional[str] = None,
     tag: Optional[str] = None
 ):
@@ -40,7 +47,7 @@ def read_tasks(
     return task_service.get_tasks(session, current_user.id, search, priority, status, sort_by, tag)
 
 @router.get("/users/{user_id}/tasks/{task_id}", response_model=TaskRead)
-def read_task(
+async def read_task(
     user_id: str,
     task_id: uuid.UUID,
     session: Session = Depends(get_session),
@@ -53,7 +60,7 @@ def read_task(
     return task
 
 @router.put("/users/{user_id}/tasks/{task_id}", response_model=TaskRead)
-def update_task(
+async def update_task(
     user_id: str,
     task_id: uuid.UUID,
     task_in: TaskUpdate,
@@ -64,10 +71,22 @@ def update_task(
     task = task_service.get_task(session, task_id, current_user.id)
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
-    return task_service.update_task(session, task, task_in)
+    
+    # Check if due date changed
+    old_due_date = task.due_date
+    updated_task = task_service.update_task(session, task, task_in)
+    
+    # Async actions
+    await task_service.publish_event_to_dapr("task.updated", updated_task)
+    if updated_task.due_date != old_due_date:
+        await task_service.cancel_reminder_job(updated_task.id)
+        if updated_task.due_date:
+            await task_service.schedule_reminder_job(updated_task)
+            
+    return updated_task
 
 @router.patch("/users/{user_id}/tasks/{task_id}/complete", response_model=TaskRead)
-def complete_task(
+async def complete_task(
     user_id: str,
     task_id: uuid.UUID,
     session: Session = Depends(get_session),
@@ -77,14 +96,22 @@ def complete_task(
     task = task_service.get_task(session, task_id, current_user.id)
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
+    
     task.completed = not task.completed
     session.add(task)
     session.commit()
     session.refresh(task)
+    
+    # Async actions
+    event_type = "task.completed" if task.completed else "task.updated"
+    await task_service.publish_event_to_dapr(event_type, task)
+    if task.completed:
+        await task_service.cancel_reminder_job(task.id)
+    
     return task
 
 @router.delete("/users/{user_id}/tasks/{task_id}")
-def delete_task(
+async def delete_task(
     user_id: str,
     task_id: uuid.UUID,
     session: Session = Depends(get_session),
@@ -94,5 +121,9 @@ def delete_task(
     task = task_service.get_task(session, task_id, current_user.id)
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
+    
+    await task_service.publish_event_to_dapr("task.deleted", task)
+    await task_service.cancel_reminder_job(task.id)
+    
     task_service.delete_task(session, task)
     return {"ok": True}

@@ -1,0 +1,31 @@
+global:
+  environment: production-azure
+
+frontend:
+  replicaCount: 3
+  image:
+    repository: <your-acr-name>.azurecr.io/todo-frontend
+    tag: "prod"
+  service:
+    type: LoadBalancer
+
+backend:
+  replicaCount: 3
+  image:
+    repository: <your-acr-name>.azurecr.io/todo-backend
+    tag: "prod"
+
+notificationService:
+  replicaCount: 2
+  image:
+    repository: <your-acr-name>.azurecr.io/notification-service
+    tag: "prod"
+
+recurringTaskService:
+  replicaCount: 2
+  image:
+    repository: <your-acr-name>.azurecr.io/recurring-task-service
+    tag: "prod"
+
+kafka:
+  brokers: "confluent-cloud-bootstrap:9092" # Placeholder for Confluent/Redpanda

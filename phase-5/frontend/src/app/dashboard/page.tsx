@@ -22,27 +22,33 @@ export default function DashboardPage() {
 
   const [view, setView] = useState<"inbox" | "upcoming" | "completed">("inbox");
   const [search, setSearch] = useState("");
-  const [sort, setSort] = useState("date_asc");
+  const [sort, setSort] = useState("created_at_desc");
+  const [priorityFilter, setPriorityFilter] = useState<string>("all");
 
-  const queryKey = ["tasks", { view, search, sort }];
+  const queryKey = ["tasks", { view, search, sort, priorityFilter }];
 
   const { data: tasks = [], isLoading: tasksLoading } = useQuery<Task[]>({
     queryKey: queryKey,
     queryFn: () => {
-        const params: any = { search, sort_by: sort };
+        const params: any = { 
+            search, 
+            sort_by: sort,
+            priority: priorityFilter === "all" ? undefined : priorityFilter
+        };
         
         if (view === "inbox") {
-            params.status = "todo";
+            params.status = "pending";
         } else if (view === "upcoming") {
-             params.status = "todo";
+             params.status = "pending";
         } else if (view === "completed") {
-             params.status = "done";
+             params.status = "completed";
         }
 
         return getTasks(params);
     },
     enabled: !!isAuthenticated, 
   });
+
 
   const { data: completedTasks = [] } = useQuery<Task[]>({
     queryKey: ["tasks", "analytics"],
@@ -185,17 +191,30 @@ export default function DashboardPage() {
                     onChange={(e) => setSearch(e.target.value)} 
                 />
               </div>
+              <Select value={priorityFilter} onValueChange={setPriorityFilter}>
+                <SelectTrigger className="w-full sm:w-[140px] h-11 bg-background border-border/50">
+                    <SelectValue placeholder="Priority" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Priorities</SelectItem>
+                  <SelectItem value="high">High</SelectItem>
+                  <SelectItem value="medium">Medium</SelectItem>
+                  <SelectItem value="low">Low</SelectItem>
+                </SelectContent>
+              </Select>
               <Select value={sort} onValueChange={setSort}>
                 <SelectTrigger className="w-full sm:w-[160px] h-11 bg-background border-border/50">
                     <SelectValue placeholder="Sort by" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="date_asc">Due Date (Soonest)</SelectItem>
-                  <SelectItem value="date_desc">Due Date (Latest)</SelectItem>
-                  <SelectItem value="priority">Priority</SelectItem>
+                  <SelectItem value="created_at_desc">Newest</SelectItem>
+                  <SelectItem value="due_date_asc">Due Date (Soonest)</SelectItem>
+                  <SelectItem value="priority_desc">Highest Priority</SelectItem>
+                  <SelectItem value="title_asc">Title (A-Z)</SelectItem>
                 </SelectContent>
               </Select>
             </div>
+
           </div>
 
           {/* Task List Container */}

@@ -38,7 +38,7 @@ export function CreateTaskDialog({ onTaskCreated }: { onTaskCreated: () => void 
   const [priority, setPriority] = useState<"low" | "medium" | "high">("medium");
   const [date, setDate] = useState<Date>();
   const [tags, setTags] = useState(""); // Comma separated string for simplicity
-  const [recurrence, setRecurrence] = useState<"none" | "daily" | "weekly" | "monthly">("none");
+  const [recurrencePattern, setRecurrencePattern] = useState<"none" | "daily" | "weekly" | "monthly" | "yearly">("none");
 
   const mutation = useMutation({
     mutationFn: createTask,
@@ -52,7 +52,7 @@ export function CreateTaskDialog({ onTaskCreated }: { onTaskCreated: () => void 
       setPriority("medium");
       setDate(undefined);
       setTags("");
-      setRecurrence("none");
+      setRecurrencePattern("none");
     },
     onError: (error) => {
         console.error("Failed to create task:", error);
@@ -72,10 +72,11 @@ export function CreateTaskDialog({ onTaskCreated }: { onTaskCreated: () => void 
       priority,
       due_date: date ? date.toISOString() : undefined,
       tags: tagList,
-      recurrence,
+      recurrence: recurrencePattern !== "none" ? { pattern: recurrencePattern, interval: 1 } : undefined,
       completed: false
     });
   };
+
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -181,7 +182,7 @@ export function CreateTaskDialog({ onTaskCreated }: { onTaskCreated: () => void 
                 <Label className="text-xs text-muted-foreground flex items-center gap-1">
                     <Clock className="w-3 h-3" /> Recurrence
                 </Label>
-                <Select value={recurrence} onValueChange={(v: any) => setRecurrence(v)}>
+                <Select value={recurrencePattern} onValueChange={(v: any) => setRecurrencePattern(v)}>
                 <SelectTrigger>
                     <SelectValue placeholder="None" />
                 </SelectTrigger>
@@ -190,9 +191,11 @@ export function CreateTaskDialog({ onTaskCreated }: { onTaskCreated: () => void 
                     <SelectItem value="daily">Daily</SelectItem>
                     <SelectItem value="weekly">Weekly</SelectItem>
                     <SelectItem value="monthly">Monthly</SelectItem>
+                    <SelectItem value="yearly">Yearly</SelectItem>
                 </SelectContent>
                 </Select>
              </div>
+
           </div>
 
         </div>

@@ -1,0 +1,31 @@
+global:
+  environment: production-oracle
+
+frontend:
+  replicaCount: 3
+  image:
+    repository: <region-key>.ocir.io/<tenancy-namespace>/todo-frontend
+    tag: "prod"
+  service:
+    type: LoadBalancer
+
+backend:
+  replicaCount: 3
+  image:
+    repository: <region-key>.ocir.io/<tenancy-namespace>/todo-backend
+    tag: "prod"
+
+notificationService:
+  replicaCount: 2
+  image:
+    repository: <region-key>.ocir.io/<tenancy-namespace>/notification-service
+    tag: "prod"
+
+recurringTaskService:
+  replicaCount: 2
+  image:
+    repository: <region-key>.ocir.io/<tenancy-namespace>/recurring-task-service
+    tag: "prod"
+
+kafka:
+  brokers: "taskflow-kafka-kafka-bootstrap.kafka.svc.cluster.local:9092"

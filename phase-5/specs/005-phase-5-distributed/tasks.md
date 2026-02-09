@@ -18,11 +18,11 @@ description: "Task list for Phase 5: Distributed Event-Driven Architecture"
 
 **Purpose**: Local development environment and project scaffolding.
 
-- [ ] T001 Initialize Dapr on Minikube per quickstart.md: `dapr init -k`
-- [ ] T002 Setup Kafka (Strimzi) on Minikube in `kafka` namespace
-- [ ] T003 Create `dapr-components/` directory in project root
-- [ ] T004 [P] Create `notification-service/` directory and initialize FastAPI project
-- [ ] T005 [P] Create `recurring-task-service/` directory and initialize FastAPI project
+- [X] T001 Initialize Dapr on Minikube per quickstart.md: `dapr init -k`
+- [X] T002 Setup Kafka (Strimzi) on Minikube in `kafka` namespace
+- [X] T003 Create `dapr-components/` directory in project root
+- [X] T004 [P] Create `notification-service/` directory and initialize FastAPI project
+- [X] T005 [P] Create `recurring-task-service/` directory and initialize FastAPI project
 
 ---
 
@@ -30,12 +30,12 @@ description: "Task list for Phase 5: Distributed Event-Driven Architecture"
 
 **Purpose**: Core data changes and shared infrastructure.
 
-- [ ] T006 Write migration script to add `priority`, `tags`, `due_date`, `recurrence` to `tasks` table in `backend/src/models/task.py`
-- [ ] T007 Create `reminders` table migration script in `backend/src/models/task.py`
-- [ ] T008 [P] Update `Task` SQLModel in `backend/src/models/task.py` with new fields
-- [ ] T009 [P] Create `Reminder` SQLModel in `backend/src/models/task.py`
-- [ ] T010 Create `kafka-pubsub.yaml` Dapr component in `deploy/helm/templates/dapr-components/`
-- [ ] T011 Create `statestore.yaml` Dapr component in `deploy/helm/templates/dapr-components/`
+- [X] T006 Write migration script to add `priority`, `tags`, `due_date`, `recurrence` to `tasks` table in `backend/src/models/task.py`
+- [X] T007 Create `reminders` table migration script in `backend/src/models/task.py`
+- [X] T008 [P] Update `Task` SQLModel in `backend/src/models/task.py` with new fields
+- [X] T009 [P] Create `Reminder` SQLModel in `backend/src/models/task.py`
+- [X] T010 Create `kafka-pubsub.yaml` Dapr component in `deploy/helm/templates/dapr-components/`
+- [X] T011 Create `statestore.yaml` Dapr component in `deploy/helm/templates/dapr-components/`
 
 ---
 
@@ -43,13 +43,13 @@ description: "Task list for Phase 5: Distributed Event-Driven Architecture"
 
 **Goal**: Support priorities, tags, and due dates in UI and API.
 
-- [ ] T012 [P] [US1] Update `TaskCreate` and `TaskUpdate` schemas in `backend/src/schemas/task.py`
-- [ ] T013 [US1] Update `add_task` MCP tool in `backend/src/services/tools.py` to handle new fields
-- [ ] T014 [US1] Update `update_task` MCP tool in `backend/src/services/tools.py` to handle new fields
-- [ ] T015 [P] [US1] Add priority selector and tags input to `frontend/src/components/create-task-dialog.tsx`
-- [ ] T016 [P] [US1] Install `react-datepicker` and add to `frontend/src/components/create-task-dialog.tsx`
-- [ ] T017 [US1] Display priority badges and tags on `frontend/src/components/task-card.tsx`
-- [ ] T018 [US1] Add overdue visual highlighting to `frontend/src/components/task-card.tsx`
+- [X] T012 [P] [US1] Update `TaskCreate` and `TaskUpdate` schemas in `backend/src/schemas/task.py`
+- [X] T013 [US1] Update `add_task` MCP tool in `backend/src/services/tools.py` to handle new fields
+- [X] T014 [US1] Update `update_task` MCP tool in `backend/src/services/tools.py` to handle new fields
+- [X] T015 [P] [US1] Add priority selector and tags input to `frontend/src/components/create-task-dialog.tsx`
+- [X] T016 [P] [US1] Install `react-datepicker` and add to `frontend/src/components/create-task-dialog.tsx`
+- [X] T017 [US1] Display priority badges and tags on `frontend/src/components/task-card.tsx`
+- [X] T018 [US1] Add overdue visual highlighting to `frontend/src/components/task-card.tsx`
 
 ---
 
@@ -57,11 +57,11 @@ description: "Task list for Phase 5: Distributed Event-Driven Architecture"
 
 **Goal**: Search, filter, and sort tasks.
 
-- [ ] T019 [US2] Implement keyword search logic in `list_tasks` service in `backend/src/services/task_service.py`
-- [ ] T020 [US2] Implement priority, tags, and status filtering in `backend/src/services/task_service.py`
-- [ ] T021 [US2] Implement sort logic (created, due date, priority) in `backend/src/services/task_service.py`
-- [ ] T022 [P] [US2] Add search bar and filter dropdowns to `frontend/src/app/dashboard/page.tsx`
-- [ ] T023 [P] [US2] Add sort selection dropdown to `frontend/src/app/dashboard/page.tsx`
+- [X] T019 [US2] Implement keyword search logic in `list_tasks` service in `backend/src/services/task_service.py`
+- [X] T020 [US2] Implement priority, tags, and status filtering in `backend/src/services/task_service.py`
+- [X] T021 [US2] Implement sort logic (created, due date, priority) in `backend/src/services/task_service.py`
+- [X] T022 [P] [US2] Add search bar and filter dropdowns to `frontend/src/app/dashboard/page.tsx`
+- [X] T023 [P] [US2] Add sort selection dropdown to `frontend/src/app/dashboard/page.tsx`
 
 ---
 
@@ -69,10 +69,10 @@ description: "Task list for Phase 5: Distributed Event-Driven Architecture"
 
 **Goal**: Publish task events to Kafka via Dapr.
 
-- [ ] T024 [US5] Implement `publish_event` utility in `backend/src/services/task_service.py` using Dapr Pub/Sub API
-- [ ] T025 [US5] Publish `task.created` event in `backend/src/api/routes/tasks.py`
-- [ ] T026 [US5] Publish `task.updated` and `task.completed` events in `backend/src/api/routes/tasks.py`
-- [ ] T027 [US5] Publish `task.deleted` event in `backend/src/api/routes/tasks.py`
+- [X] T024 [US5] Implement `publish_event` utility in `backend/src/services/task_service.py` using Dapr Pub/Sub API
+- [X] T025 [US5] Publish `task.created` event in `backend/src/api/routes/tasks.py`
+- [X] T026 [US5] Publish `task.updated` and `task.completed` events in `backend/src/api/routes/tasks.py`
+- [X] T027 [US5] Publish `task.deleted` event in `backend/src/api/routes/tasks.py`
 
 ---
 
@@ -80,11 +80,11 @@ description: "Task list for Phase 5: Distributed Event-Driven Architecture"
 
 **Goal**: Schedule reminders using Dapr Jobs API and deliver via Notification Service.
 
-- [ ] T028 [US6] Implement `schedule_reminder_job` in `backend/src/services/task_service.py` using Dapr Jobs API
-- [ ] T029 [US6] Call `schedule_reminder_job` when task is created/updated with `due_date`
-- [ ] T030 [US4] Implement `/api/jobs/trigger` endpoint in `notification-service/main.py`
-- [ ] T031 [US4] Implement browser push notification logic in `notification-service/main.py`
-- [ ] T032 [US4] Create `Dockerfile` and `requirements.txt` for `notification-service/`
+- [X] T028 [US6] Implement `schedule_reminder_job` in `backend/src/services/task_service.py` using Dapr Jobs API
+- [X] T029 [US6] Call `schedule_reminder_job` when task is created/updated with `due_date`
+- [X] T030 [US4] Implement `/api/jobs/trigger` endpoint in `notification-service/main.py`
+- [X] T031 [US4] Implement browser push notification logic in `notification-service/main.py`
+- [X] T032 [US4] Create `Dockerfile` and `requirements.txt` for `notification-service/`
 
 ---
 
@@ -92,10 +92,10 @@ description: "Task list for Phase 5: Distributed Event-Driven Architecture"
 
 **Goal**: Automatically create next task occurrence via Recurring Task Service.
 
-- [ ] T033 [US6] Implement Dapr subscription to `task-events` in `recurring-task-service/main.py`
-- [ ] T034 [US3] Implement logic to calculate next occurrence date in `recurring-task-service/main.py`
-- [ ] T035 [US3] Implement Dapr service invocation to Backend for task creation in `recurring-task-service/main.py`
-- [ ] T036 [US6] Create `Dockerfile` and `requirements.txt` for `recurring-task-service/`
+- [X] T033 [US6] Implement Dapr subscription to `task-events` in `recurring-task-service/main.py`
+- [X] T034 [US3] Implement logic to calculate next occurrence date in `recurring-task-service/main.py`
+- [X] T035 [US3] Implement Dapr service invocation to Backend for task creation in `recurring-task-service/main.py`
+- [X] T036 [US6] Create `Dockerfile` and `requirements.txt` for `recurring-task-service/`
 
 ---
 
@@ -103,11 +103,12 @@ description: "Task list for Phase 5: Distributed Event-Driven Architecture"
 
 **Goal**: Production-ready Kubernetes deployment and CI/CD.
 
-- [ ] T037 [US7] Create Helm templates for `notification-service` and `recurring-task-service` in `deploy/helm/todo-chatbot/templates/`
-- [ ] T038 [US7] Add Dapr annotations and resource limits to all Helm deployment templates
-- [ ] T039 [US7] Create environment-specific values files: `values-prod-azure.yaml`, `values-prod-gcp.yaml`, `values-prod-oracle.yaml`
-- [ ] T040 [US7] Create `.github/workflows/deploy.yml` for automated build and deploy
+- [X] T037 [US7] Create Helm templates for `notification-service` and `recurring-task-service` in `deploy/helm/todo-chatbot/templates/`
+- [X] T038 [US7] Add Dapr annotations and resource limits to all Helm deployment templates
+- [X] T039 [US7] Create environment-specific values files: `values-prod-azure.yaml`, `values-prod-gcp.yaml`, `values-prod-oracle.yaml`
+- [X] T040 [US7] Create `.github/workflows/deploy.yml` for automated build and deploy
 - [ ] T041 [US7] Provision cloud K8s cluster (AKS/GKE/OKE) and install Dapr
+
 
 ---
 
